@@ -1,0 +1,772 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Pasaran Togel</title>
+   <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: url('https://i.pinimg.com/736x/ac/47/7e/ac477e7923915d16545a37be76a3ef2f.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+}
+
+/* overlay lebih transparan */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(2px);
+    z-index: 0;
+}
+
+/* container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    backdrop-filter: blur(6px);
+}
+
+/* header */
+.header {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+}
+
+/* glass card */
+.stat-card,
+.filter-bar,
+.table-wrapper {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* stats */
+.stats-bar {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    padding: 15px 25px;
+    text-align: center;
+    color: white;
+}
+
+/* filter */
+.filter-bar {
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-bar input,
+.filter-bar select {
+    padding: 10px 15px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.filter-bar input::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+/* table */
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: transparent;
+}
+
+/* header tabel */
+th {
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 12px 15px;
+    backdrop-filter: blur(6px);
+}
+
+/* isi tabel */
+td {
+    padding: 12px 15px;
+    color: #fff;
+    background: rgba(255,255,255,0.05);
+}
+
+tr:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* badge */
+.group-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+}
+
+/* status */
+.status-result {
+    background: rgba(0, 255, 100, 0.3);
+    color: #00ff9c;
+}
+
+.status-pending {
+    background: rgba(255, 0, 0, 0.3);
+    color: #ff6b6b;
+}
+
+/* result glow */
+.result-display {
+    font-weight: bold;
+    font-family: monospace;
+    background: rgba(0, 255, 100, 0.15);
+    color: #00ff9c;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,255,150,0.3);
+}
+
+/* button */
+.btn-action {
+    background: linear-gradient(135deg, #FFB347, #FF8C00);
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.btn-copy {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+}
+
+.btn-reset {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+/* modal */
+.modal-content {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    color: white;
+    border-radius: 16px;
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #FFB347;
+    border-radius: 10px;
+}
+/* SELECT CUSTOM (GLASS STYLE) */
+.filter-bar select {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+
+/* OPTION DROPDOWN */
+.filter-bar select option {
+    background: #2c1a4d; /* ungu gelap */
+    color: #fff;
+}
+
+/* HOVER */
+.filter-bar select:hover {
+    border-color: #ffb347;
+}
+
+/* FOCUS */
+.filter-bar select:focus {
+    outline: none;
+    border-color: #ffb347;
+    box-shadow: 0 0 8px rgba(255, 179, 71, 0.6);
+}
+.filter-bar select {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 35px;
+}
+/* ROW SUDAH RESULT */
+tr.row-result {
+    background: rgba(0, 255, 120, 0.15) !important;
+    box-shadow: inset 0 0 10px rgba(0,255,150,0.2);
+    transition: all 0.3s ease;
+}
+
+/* hover biar makin hidup */
+tr.row-result:hover {
+    background: rgba(0, 255, 120, 0.25) !important;
+}
+
+/* efek glow tipis */
+tr.row-result td {
+    border-top: 1px solid rgba(0,255,150,0.2);
+    border-bottom: 1px solid rgba(0,255,150,0.2);
+}
+.datetime {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+    display: inline-block;
+}
+
+/* PAGI = UNGU */
+tr.group-pagi td {
+    background: rgba(155, 89, 182, 0.18);
+}
+
+tr.group-pagi:hover td {
+    background: rgba(155, 89, 182, 0.35);
+}
+
+/* SORE = PINK */
+tr.group-sore td {
+    background: rgba(255, 105, 180, 0.18);
+}
+
+tr.group-sore:hover td {
+    background: rgba(255, 105, 180, 0.35);
+}
+
+/* MALAM = BIRU GELAP */
+tr.group-malam td {
+    background: rgba(44, 62, 80, 0.30);
+}
+
+tr.group-malam:hover td {
+    background: rgba(44, 62, 80, 0.5);
+}
+tr.group-pagi td:first-child { border-left: 4px solid #FFD93D; }
+tr.group-sore td:first-child { border-left: 4px solid #FF7E5F; }
+tr.group-malam td:first-child { border-left: 4px solid #4CA1AF; }
+</style>
+</head>
+<body>
+    <div class="container">
+      <div class="header">
+    <h1>Jadwal Buka Tutup Pasaran Togel</h1>
+    <p>Monitoring result dan input angka result pasaran</p>
+    <div id="currentDateTime" class="datetime"></div>
+</div>
+        <div class="stats-bar" id="statsBar"></div>
+
+        <div class="filter-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Cari pasaran...">
+            <select id="filterStatus">
+                <option value="all">Semua Status</option>
+                <option value="result">Sudah Result</option>
+                <option value="pending">Belum Result</option>
+            </select>
+            <select id="filterGroup">
+                <option value="all">Semua Group</option>
+                <option value="MALAM">🌙 MALAM</option>
+                <option value="PAGI">☀️ PAGI</option>
+                <option value="SORE">🌅 SORE</option>
+            </select>
+            <button id="resetAllBtn">🔄 Reset Semua Result</button>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="scheduleTable">
+                <thead>
+                    <tr>
+                        <th>Group</th>
+                        <th>Pasaran</th>
+                        <th>Status</th>
+                        <th>Jadwal</th>
+                        <th>Angka Result</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="copyModal" class="modal">
+        <div class="modal-content">
+            <h3>📋 Hasil Pengeluaran</h3>
+            <textarea id="copyTextArea" rows="8" readonly></textarea>
+            <div class="modal-buttons">
+                <button onclick="manualCopy()">📋 Salin ke Clipboard</button>
+                <button onclick="closeCopyModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+ function updateDateTime() {
+    const now = new Date();
+
+    const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+    const months = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+
+    const dayName = days[now.getDay()];
+    const date = now.getDate();
+    const month = months[now.getMonth()];
+    const year = now.getFullYear();
+
+    const hours = now.getHours();
+    const time = now.toLocaleTimeString();
+
+    const el = document.getElementById("currentDateTime");
+
+    // =========================
+    // DETEKSI WAKTU
+    // =========================
+    let periode = "";
+    let icon = "";
+    let className = "";
+
+    if (hours >= 4 && hours < 12) {
+        periode = "PAGI";
+        icon = "☀️";
+        className = "time-pagi";
+    } else if (hours >= 12 && hours < 18) {
+        periode = "SORE";
+        icon = "🌅";
+        className = "time-sore";
+    } else {
+        periode = "MALAM";
+        icon = "🌙";
+        className = "time-malam";
+    }
+
+    // =========================
+    // TEXT FINAL
+    // =========================
+    const full = `${icon} ${dayName}, ${date} ${month} ${year} • ${time} (${periode})`;
+
+    el.textContent = full;
+
+    // reset class
+    el.classList.remove("time-pagi", "time-sore", "time-malam");
+    el.classList.add(className);
+}
+
+// realtime
+setInterval(updateDateTime, 1000);
+updateDateTime();
+        // Daftar pasaran yang hanya memiliki Prize 1
+        const onlyPrize1Markets = [
+            "HOKIDRAW JAM 00", "HOKIDRAW JAM 01", "HOKIDRAW JAM 02", "HOKIDRAW JAM 03",
+            "HOKIDRAW JAM 04", "HOKIDRAW JAM 05", "HOKIDRAW JAM 06", "HOKIDRAW JAM 07",
+            "HOKIDRAW JAM 08", "HOKIDRAW JAM 09", "HOKIDRAW JAM 10", "HOKIDRAW JAM 11",
+            "HOKIDRAW JAM 12", "HOKIDRAW JAM 13", "HOKIDRAW JAM 14", "HOKIDRAW JAM 15",
+            "HOKIDRAW JAM 16", "HOKIDRAW JAM 17", "HOKIDRAW JAM 18", "HOKIDRAW JAM 19",
+            "HOKIDRAW JAM 20", "HOKIDRAW JAM 21", "HOKIDRAW JAM 22", "HOKIDRAW JAM 23",
+            "KENTUCKYMID", "FLORIDAMID", "NEWYORKMID", "CAROLINADAY", "OREGON03", "OREGON06",
+            "CALIFORNIA", "FLORIDAEVE", "OREGON09", "KENTUCKYEVE", "CAROLINAEVE", "BULLSEYE",
+            "OREGON12", "JAKARTA 1400", "SINGAPORE TOTO", "PCSO", "JAKARTA 2330"
+        ];
+
+        // Jadwal khusus untuk pasaran tertentu
+        const specialSchedules = {
+            "SINGAPORE": "SELASA & JUMAT (LIBUR)",
+            "SINGAPORE TOTO": "SELASA & JUMAT (LIBUR)",
+            "MAGNUMD4D": "RABU, SABTU & MINGGU"
+        };
+
+        // DATA PASARAN (67 pasaran)
+        const allMarkets = [
+            // MALAM (17)
+            "HOKIDRAW JAM 00","HUAHIN 0100","HOKIDRAW JAM 01","KENTUCKYMID","FLORIDAMID","BANGKOK 0130","HOKIDRAW JAM 02","NEWYORKMID","BRUNEI 02","CAROLINADAY","HOKIDRAW JAM 03","OREGON03","HOKIDRAW JAM 04","HOKIDRAW JAM 05","HOKIDRAW JAM 06","OREGON06","HOKIDRAW JAM 07",
+            // PAGI (27)
+            "HOKIDRAW JAM 08","HOKIDRAW JAM 09","BANGKOK 0930","CALIFORNIA","FLORIDAEVE","OREGON09","HOKIDRAW JAM 10","NEWYORKEVE","KENTUCKYEVE","HOKIDRAW JAM 11","CHELSEA 11","TOTOCAMBODIA","CAROLINAEVE","HOKIDRAW JAM 12","BULLSEYE","POIPET12","OREGON12","TOTOMACAU SIANG","HOKIDRAW JAM 13","SYDNEY","JAKARTA 1400","HOKIDRAW JAM 14","BRUNEI 14","HOKIDRAW JAM 15","CHELSEA 15","POIPET15","TOTOMALI1530",
+            // SORE (23)
+            "HOKIDRAW JAM 16","HUAHIN 1630","HOKIDRAW JAM 17","SINGAPORE","SINGAPORE TOTO","HOKIDRAW JAM 18","MAGNUMD4D","HOKIDRAW JAM 19","CHELSEA 19","POIPET19","HOKIDRAW JAM 20","PCSO","TOTOMALI2030","HOKIDRAW JAM 21","HUAHIN 2100","CHELSEA 21","NEVADA","BRUNEI 21","HOKIDRAW JAM 22","POIPET22","HOKIDRAW JAM 23","JAKARTA 2330","TOTOMALI2330"
+        ];
+
+        // Group mapping
+        const getGroup = (market) => {
+            const malamList = allMarkets.slice(0, 17);
+            const pagiList = allMarkets.slice(17, 44);
+            if (malamList.includes(market)) return "MALAM";
+            if (pagiList.includes(market)) return "PAGI";
+            return "SORE";
+        };
+
+        // Mendapatkan jadwal untuk pasaran
+        const getSchedule = (market) => {
+            if (specialSchedules[market]) {
+                return specialSchedules[market];
+            }
+            return "SENIN - MINGGU";
+        };
+
+        // Cek apakah pasaran hanya memiliki Prize 1
+        const isOnlyPrize1 = (market) => {
+            return onlyPrize1Markets.includes(market);
+        };
+
+        // Data markets
+        let markets = allMarkets.map((name, idx) => ({
+            id: idx,
+            market: name,
+            group: getGroup(name),
+            schedule: getSchedule(name),
+            resultNumber: null,
+            hasResult: false,
+            onlyPrize1: isOnlyPrize1(name)
+        }));
+
+        // Load data dari localStorage
+        const loadData = () => {
+            const saved = localStorage.getItem("togelData");
+            if (saved) {
+                const data = JSON.parse(saved);
+                data.forEach(item => {
+                    const m = markets.find(m => m.id === item.id);
+                    if (m) {
+                        m.resultNumber = item.resultNumber;
+                        m.hasResult = item.hasResult;
+                    }
+                });
+            }
+        };
+
+        const saveData = () => {
+            const toSave = markets.map(m => ({
+                id: m.id,
+                resultNumber: m.resultNumber,
+                hasResult: m.hasResult
+            }));
+            localStorage.setItem("togelData", JSON.stringify(toSave));
+        };
+
+        loadData();
+
+        // Fungsi SHIO
+        const getShio = (angka) => {
+            const shioList = ["Tikus", "Kerbau", "Macan", "Kelinci", "Naga", "Ular", "Kuda", "Kambing", "Monyet", "Ayam", "Anjing", "Babi"];
+            if (!angka || angka === "-") return "-";
+            const lastTwo = parseInt(angka.slice(-2));
+            if (isNaN(lastTwo)) return "-";
+            return shioList[lastTwo % 12];
+        };
+
+        // Fungsi format angka 4 digit
+        const format4d = (num) => {
+            if (!num) return "-";
+            const cleaned = num.toString().replace(/\D/g, '');
+            if (cleaned === "") return "-";
+            return cleaned.padStart(4, '0').slice(-4);
+        };
+
+        // Fungsi untuk mendapatkan Prize dari result text (disesuaikan dengan jenis pasaran)
+        const getPrizes = (resultText, onlyPrize1) => {
+            if (!resultText) return { prize1: "-", prize2: "-", prize3: "-" };
+            
+            let parts = [];
+            if (resultText.includes(",")) {
+                parts = resultText.split(",");
+            } else if (resultText.includes(" ")) {
+                parts = resultText.split(/\s+/);
+            } else {
+                parts = [resultText];
+            }
+            
+            parts = parts.map(p => p.trim()).filter(p => p);
+            
+            if (onlyPrize1) {
+                // Hanya ambil Prize 1
+                return {
+                    prize1: parts[0] ? format4d(parts[0]) : "-",
+                    prize2: "-",
+                    prize3: "-"
+                };
+            } else {
+                // Ambil 3 prize
+                return {
+                    prize1: parts[0] ? format4d(parts[0]) : "-",
+                    prize2: parts[1] ? format4d(parts[1]) : "-",
+                    prize3: parts[2] ? format4d(parts[2]) : "-"
+                };
+            }
+        };
+
+        // Fungsi untuk generate teks copy
+        const generateCopyText = (marketName, resultText, onlyPrize1) => {
+            const now = new Date();
+            const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            
+            const dateStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}, ${days[now.getDay()]}`;
+            const { prize1, prize2, prize3 } = getPrizes(resultText, onlyPrize1);
+            const shio = getShio(prize1);
+            
+            let text = `Hasil Pengeluaran ${marketName}\n`;
+            text += `Hari ini ${dateStr}\n`;
+            text += `Prize 1 : ${prize1}${shio !== "-" ? `, SHIO : ${shio}` : ""}\n`;
+            if (!onlyPrize1) {
+                if (prize2 !== "-") text += `Prize 2 : ${prize2}\n`;
+                if (prize3 !== "-") text += `Prize 3 : ${prize3}\n`;
+            }
+            text += `Selamat Kepada Pemenang, Salam JP`;
+            
+            return text;
+        };
+
+        // Fungsi copy dengan modal fallback
+        const copyResult = (market, resultText, onlyPrize1) => {
+            if (!resultText) {
+                alert(`⚠️ ${market} belum memiliki result!`);
+                return;
+            }
+            
+            const text = generateCopyText(market, resultText, onlyPrize1);
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(`✅ ${market} berhasil disalin!`);
+                }).catch((err) => {
+                    showManualCopyModal(text);
+                });
+            } else {
+                showManualCopyModal(text);
+            }
+        };
+
+        const showManualCopyModal = (text) => {
+            const modal = document.getElementById('copyModal');
+            const textarea = document.getElementById('copyTextArea');
+            textarea.value = text;
+            modal.style.display = 'flex';
+            textarea.select();
+            textarea.focus();
+        };
+
+        const manualCopy = () => {
+            const textarea = document.getElementById('copyTextArea');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            
+            try {
+                const success = document.execCommand('copy');
+                if (success) {
+                    showToast('✅ Teks berhasil disalin!');
+                    closeCopyModal();
+                } else {
+                    alert('⚠️ Gagal menyalin, silakan tekan Ctrl+C untuk menyalin');
+                }
+            } catch (err) {
+                alert('⚠️ Gagal menyalin, silakan tekan Ctrl+C untuk menyalin');
+            }
+        };
+
+        const closeCopyModal = () => {
+            document.getElementById('copyModal').style.display = 'none';
+        };
+
+        const showToast = (msg) => {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        };
+
+        // Render tabel
+        const render = () => {
+            const search = document.getElementById("searchInput").value.toLowerCase();
+            const statusFilter = document.getElementById("filterStatus").value;
+            const groupFilter = document.getElementById("filterGroup").value;
+
+            let filtered = markets.filter(m => {
+                const matchSearch = m.market.toLowerCase().includes(search);
+                const matchStatus = statusFilter === "all" || 
+                    (statusFilter === "result" && m.hasResult) ||
+                    (statusFilter === "pending" && !m.hasResult);
+                const matchGroup = groupFilter === "all" || m.group === groupFilter;
+                return matchSearch && matchStatus && matchGroup;
+            });
+
+            const tbody = document.getElementById("tableBody");
+            tbody.innerHTML = "";
+
+filtered.forEach((m, i) => {
+const row = tbody.insertRow();
+
+/* TAMBAH WARNA GROUP */
+if (m.group === "PAGI") row.classList.add("group-pagi");
+if (m.group === "SORE") row.classList.add("group-sore");
+if (m.group === "MALAM") row.classList.add("group-malam");    row.classList.add("fade-in");
+    row.style.animationDelay = (i * 0.03) + "s";
+
+    const groupIcon = m.group === "MALAM" ? "🌙" : (m.group === "PAGI" ? "☀️" : "🌅");
+    row.insertCell(0).innerHTML = `<span class="group-badge">${groupIcon} ${m.group}</span>`;
+    
+    const onlyPrize1Badge = m.onlyPrize1 ? '<span class="badge-only-prize1">Prize 1 Only</span>' : '';
+    row.insertCell(1).innerHTML = `<strong>${m.market}</strong> ${onlyPrize1Badge}`;
+    
+    const statusClass = m.hasResult ? "status-result" : "status-pending";
+    const statusText = m.hasResult ? "✅ SUDAH RESULT" : "⏳ BELUM RESULT";
+    row.insertCell(2).innerHTML = `<span class="status-badge ${statusClass}">${statusText}</span>`;
+    
+    row.insertCell(3).innerHTML = m.schedule;
+    
+    const resultCell = row.insertCell(4);
+    if (m.hasResult && m.resultNumber) {
+        const { prize1, prize2, prize3 } = getPrizes(m.resultNumber, m.onlyPrize1);
+        let display = prize1;
+        if (!m.onlyPrize1 && prize2 !== "-") display += ` | ${prize2}`;
+        if (!m.onlyPrize1 && prize3 !== "-") display += ` | ${prize3}`;
+        resultCell.innerHTML = `<span class="result-display slide-up">${display}</span>`;
+    } else {
+        resultCell.innerHTML = "—";
+    }
+
+    const actionCell = row.insertCell(5);
+
+    if (m.hasResult) {
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Masukan Angka";
+        editBtn.className = "btn-action";
+
+        editBtn.onclick = () => {
+            const newVal = prompt(`Edit result ${m.market}`, m.resultNumber);
+            if (newVal && newVal.trim()) {
+                m.resultNumber = newVal.trim();
+                m.hasResult = true;
+                saveData();
+                render();
+                showToast(`✅ ${m.market} diupdate!`);
+            }
+        };
+
+        const resetBtn = document.createElement("button");
+        resetBtn.textContent = "🔄 Reset";
+        resetBtn.className = "btn-action btn-reset";
+
+        resetBtn.onclick = () => {
+            if (confirm(`Reset ${m.market}?`)) {
+                m.resultNumber = null;
+                m.hasResult = false;
+                saveData();
+                render();
+            }
+        };
+
+        const copyBtn = document.createElement("button");
+        copyBtn.textContent = "📋 Copy";
+        copyBtn.className = "btn-action btn-copy";
+        copyBtn.onclick = () => copyResult(m.market, m.resultNumber, m.onlyPrize1);
+
+        actionCell.append(editBtn, resetBtn, copyBtn);
+    } else {
+        const setBtn = document.createElement("button");
+        setBtn.textContent = "📝 Set Result";
+        setBtn.className = "btn-action";
+
+        setBtn.onclick = () => {
+            const val = prompt(`Masukkan result ${m.market}`);
+            if (val && val.trim()) {
+                m.resultNumber = val.trim();
+                m.hasResult = true;
+                saveData();
+                render();
+                showToast("✅ Result masuk!");
+            }
+        };
+
+        actionCell.appendChild(setBtn);
+    }
+});
+            // Update stats
+            const total = markets.length;
+            const resultCount = markets.filter(m => m.hasResult).length;
+            const malamCount = markets.filter(m => m.group === "MALAM").length;
+            const pagiCount = markets.filter(m => m.group === "PAGI").length;
+            const soreCount = markets.filter(m => m.group === "SORE").length;
+            
+            document.getElementById("statsBar").innerHTML = `
+                <div class="stat-card"><h3>📊 Total Pasaran</h3><div class="number">${total}</div><small>🌙 ${malamCount} | ☀️ ${pagiCount} | 🌅 ${soreCount}</small></div>
+                <div class="stat-card"><h3>✅ Sudah Result</h3><div class="number">${resultCount}</div></div>
+                <div class="stat-card"><h3>⏳ Belum Result</h3><div class="number">${total - resultCount}</div></div>
+            `;
+        };
+
+        const resetAll = () => {
+            if (confirm("Reset semua result?")) {
+                markets.forEach(m => {
+                    m.resultNumber = null;
+                    m.hasResult = false;
+                });
+                saveData();
+                render();
+                showToast("✅ Semua result direset!");
+            }
+        };
+
+        document.getElementById("searchInput").addEventListener("input", render);
+        document.getElementById("filterStatus").addEventListener("change", render);
+        document.getElementById("filterGroup").addEventListener("change", render);
+        document.getElementById("resetAllBtn").addEventListener("click", resetAll);
+
+        render();
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('copyModal');
+            if (event.target === modal) {
+                closeCopyModal();
+            }
+        };
+/* AUTO UPDATE */
+setInterval(()=>{
+load();
+render();
+},3000);
+
+/* JAM */
+setInterval(()=>{
+document.title="Dashboard • "+new Date().toLocaleTimeString();
+},1000);
+    </script>
+    
+</body>
+</html>
